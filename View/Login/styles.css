@@ -1,0 +1,122 @@
+/* Estilo para el fondo de pantalla */
+body {
+    margin: 0;
+    padding: 0;
+    background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR2i85hzz13fkacRTHYMtxuI4DvD1gMaRaxvw&s');
+    background-size: cover; /* Asegura que la imagen cubra toda la pantalla */
+    background-position: center; /* Centra la imagen de fondo */
+    background-attachment: fixed; /* Fija el fondo cuando se hace scroll */
+    font-family: 'Roboto', sans-serif; /* Establece la fuente para todo el cuerpo */
+}
+
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.login-card {
+    display: flex;
+    flex-direction: column; /* Coloca los elementos de la tarjeta en columna */
+    justify-content: center; /* Centra el contenido verticalmente */
+    align-items: center; /* Centra el contenido horizontalmente */
+    max-width: 900px;
+    width: 100%;
+    background: rgba(253, 248, 248, 0.5); /* Fondo blanco semitransparente */
+    border-radius: 15px;
+    overflow: hidden;
+}
+
+/* El lado derecho de la tarjeta con el formulario */
+.card-right {
+    width: 50%;
+    padding: 40px;
+    display: flex; /* Usa Flexbox para centrar el contenido dentro de .card-right */
+    flex-direction: column; /* Alinea los elementos en columna */
+    justify-content: center; /* Centra el contenido verticalmente */
+    align-items: center; /* Centra el contenido horizontalmente */
+}
+
+/* Estilo de los títulos */
+.title {
+    font-size: 2.5rem;
+    font-weight: 600;
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.welcome {
+    font-size: 1.25rem;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.input-group {
+    margin-bottom: 20px;
+}
+
+.input-group label {
+    display: block;
+    font-weight: 500;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 10px;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    background: rgba(255, 255, 255, 0.10); /* Fondo blanco semitransparente */
+    border-radius: 5px;
+    margin-top: 5px;
+}
+
+.actions {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.btn {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 20px;
+    font-size: 1rem;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.btn:hover {
+    background-color: #0056b3;
+}
+
+.or-divider {
+    text-align: center;
+    margin: 20px 0;
+}
+
+/* Enlace para crear cuenta */
+.create-account {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.create-account a {
+    color: #007aed;
+    text-decoration: none;
+}
+
+.create-account a:hover {
+    text-decoration: underline;
+}
+
+/* Crédito de la imagen de fondo */
+.image-credit {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 0.9rem;
+}
+
+.image-credit a {
+    color: #007bff;
+}

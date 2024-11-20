@@ -11,7 +11,7 @@
     <div class="container">
         <div class="login-card">
             <div class="card-right">
-                <h1 class="title">Registro</h1>
+                <h1 class="title">Inicio de Sesion</h1>
                 <h2 class="welcome">¡Bienvenido!</h2>
                 <form action="registro.php" method="POST">
                     <div class="input-group">
@@ -23,12 +23,10 @@
                         <input type="password" id="registerPassword" name="registerPassword" required>
                     </div>
                     <div class="actions">
-                        <button type="submit" class="btn">Registrar</button>
+                        <button type="submit" class="btn">Iniciar Sesion</button>
                     </div>                    
                     <div class="create-account">
-                    <div class="create-account">
-                            <p>¿Ya tienes cuenta? <a href="../Login/login.php">Inicia sesión</a></p>
-                    </div>
+                        <p>¿No tienes cuenta? <a href="../Registro/Registro.php"">Registrate</a></p>
                     </div>
                 </form>
             </div>

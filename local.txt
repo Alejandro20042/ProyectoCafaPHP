@@ -1,2 +1,1 @@
-http://localhost/php/View/registro.php
-
+http://localhost/php/View/Registro/Registro.php

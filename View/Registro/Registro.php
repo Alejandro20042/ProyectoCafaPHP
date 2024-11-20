@@ -12,7 +12,7 @@
         <div class="login-card">
             <div class="card-right">
                 <h1 class="title">Registro</h1>
-                <h2 class="welcome">¡Bienvenido!</h2>
+                <h2 class="welcome"></h2>
                 <form action="registro.php" method="POST">
                     <div class="input-group">
                         <label for="registerEmail">Correo Electrónico</label>

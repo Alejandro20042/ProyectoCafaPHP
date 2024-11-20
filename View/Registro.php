@@ -8,17 +8,8 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <!-- Contenedor principal para centrar la tarjeta de login en la pantalla -->
     <div class="container">
-        <!-- Tarjeta de registro con la imagen y el formulario -->
         <div class="login-card">
-            <!-- Lado izquierdo de la tarjeta con la imagen decorativa -->
-            <div class="card-left">
-                <div class="image-cover">
-                </div>
-            </div>
-
-            <!-- Lado derecho de la tarjeta con el formulario de registro -->
             <div class="card-right">
                 <h1 class="title">Registro</h1>
                 <h2 class="welcome">¡Bienvenido!</h2>
@@ -35,14 +26,12 @@
                         <button type="submit" class="btn">Registrar</button>
                     </div>                    
                     <div class="create-account">
-                        <p>¿Nuevo en Woodcraft? <a href="#">Crea una cuenta</a></p>
+                        <p>¿Ya tienes cuenta? <a href="#">Inicia Sesion</a></p>
                     </div>
                 </form>
             </div>
         </div>
     </div>
-
-    <!-- Crédito de la imagen en la parte inferior de la página -->
     <div class="image-credit">
         Foto de <a href="https://unsplash.com/@katishna?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash">Katie Azi</a> en <a href="https://unsplash.com/photos/a-laptop-computer-sitting-on-top-of-a-wooden-table-6bEc0U360LA?utm_content=creditCopyText&utm_medium=referral&utm_source=unsplash">Unsplash</a>
     </div>

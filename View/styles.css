@@ -1,0 +1,146 @@
+/* Estilo para el fondo de pantalla */
+body {
+    margin: 0;
+    padding: 0;
+    background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRwek-6ahFd7J2ycIN9F1Y4NyWIPtPV2JDlfw&s');
+    background-size: cover; /* Asegura que la imagen cubra toda la pantalla */
+    background-position: center; /* Centra la imagen de fondo */
+    background-attachment: fixed; /* Fija el fondo cuando se hace scroll */
+    font-family: 'Roboto', sans-serif; /* Establece la fuente para todo el cuerpo */
+}
+
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.login-card {
+    display: flex;
+    max-width: 900px;
+    width: 100%;
+    background: rgba(255, 255, 255, 0.9); /* Fondo blanco semitransparente */
+    border-radius: 15px;
+    overflow: hidden;
+}
+
+/* Asegura que el contenedor izquierdo ocupe el 50% del ancho */
+.card-left {
+    width: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Hace que la imagen dentro de la card-left ocupe todo el espacio disponible */
+.image-cover img {
+    width: 100%;
+    height: 100%; /* Asegura que la imagen se estire para llenar todo el contenedor */
+    object-fit: cover; /* Cubre el área del contenedor sin distorsionar la imagen */
+}
+
+/* El lado derecho de la tarjeta con el formulario */
+.card-right {
+    width: 50%;
+    padding: 40px;
+}
+
+.title {
+    font-size: 2.5rem;
+    font-weight: 600;
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.welcome {
+    font-size: 1.25rem;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.input-group {
+    margin-bottom: 20px;
+}
+
+.input-group label {
+    display: block;
+    font-weight: 500;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 10px;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-top: 5px;
+}
+
+.actions {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.btn {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 20px;
+    font-size: 1rem;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.btn:hover {
+    background-color: #0056b3;
+}
+
+.or-divider {
+    text-align: center;
+    margin: 20px 0;
+}
+
+.google-btn {
+    background-color: #4285F4;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 20px;
+    font-size: 1rem;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.google-btn:hover {
+    background-color: #357ae8;
+}
+
+.google-icon {
+    margin-right: 10px;
+}
+
+.create-account {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.create-account a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+.create-account a:hover {
+    text-decoration: underline;
+}
+
+.image-credit {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 0.9rem;
+}
+
+.image-credit a {
+    color: #007bff;
+}

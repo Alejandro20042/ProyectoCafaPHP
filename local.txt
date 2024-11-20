@@ -1,1 +1,2 @@
-http://localhost/php/prueba.php
+http://localhost/php/View/registro.php
+

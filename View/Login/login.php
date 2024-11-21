@@ -11,7 +11,7 @@
         <div class="login-card">
             <div class="card-right">
                 <h1 class="title">Inicio de Sesión</h1>
-                <h2 class="welcome">¡Bienvenido!</h2>
+                <h2 class="welcome">¡Bienvenidosa!</h2>
                 <form action="../../Logica/loginController.php" method="POST">
                     <div class="input-group">
                         <label for="loginEmail">Correo Electrónico</label>
@@ -30,9 +30,6 @@
                 </form>
             </div>
         </div>
-    </div>
-    <div class="image-credit">
-        Foto de <a href="https://unsplash.com/@katishna">Katie Azi</a> en <a href="https://unsplash.com">Unsplash</a>
     </div>
 </body>
 </html>

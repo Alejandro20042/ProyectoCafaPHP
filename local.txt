@@ -1,1 +1,3 @@
 http://localhost/php/View/Registro/Registro.php
+
+tener cuidado con las rutas 

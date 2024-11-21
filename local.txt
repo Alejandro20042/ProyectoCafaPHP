@@ -1,0 +1,1 @@
+http://localhost/php/View/Registro/Registro.php

@@ -1,85 +1,78 @@
 <?php
-// Generar claves RSA (esto debería hacerse previamente y guardarse en un lugar seguro)
-$privateKey = null;
-$publicKey = null;
+include '../../Logica/sesion.php';
 
-// Verificar si ya existe una clave privada y pública generada
-if (!file_exists("private.key") || !file_exists("public.key")) {
-    // Generar nuevas claves
-    $res = openssl_pkey_new([
-        "private_key_bits" => 2048,
-        "private_key_type" => OPENSSL_KEYTYPE_RSA,
-    ]);
-
-    // Comprobamos si la clave fue generada correctamente
-    if (!$res) {
-        $error_message = 'Error al generar la clave privada: ' . openssl_error_string();
-        error_log($error_message);  // Registrar el error en el archivo de log
-        die($error_message);  // Mostrar el error y detener la ejecución
-    }
-
-    // Exportar la clave privada y guardarla en archivo
-    if (!openssl_pkey_export($res, $privateKey)) {
-        $error_message = 'Error al exportar la clave privada: ' . openssl_error_string();
-        error_log($error_message);  // Registrar el error en el archivo de log
-        die($error_message);  // Mostrar el error y detener la ejecución
-    }
-
-    // Guardamos la clave privada en un archivo
-    file_put_contents("private.key", $privateKey);
-
-    // Obtener la clave pública y guardarla en archivo
-    $details = openssl_pkey_get_details($res);
-    if (!$details) {
-        $error_message = 'Error al obtener detalles de la clave pública: ' . openssl_error_string();
-        error_log($error_message);  // Registrar el error en el archivo de log
-        die($error_message);  // Mostrar el error y detener la ejecución
-    }
-
-    // La clave pública
-    $publicKey = $details["key"];
-    file_put_contents("public.key", $publicKey);
-} else {
-    // Leer las claves generadas previamente
-    $privateKey = file_get_contents("private.key");
-    $publicKey = file_get_contents("public.key");
+// Obtener el user_id de la sesión
+if (!isset($_SESSION['user_id'])) {
+    die("Error: Usuario no autenticado.");
 }
 
-// Encriptar texto
+$userId = $_SESSION['user_id']; // Aquí obtienes el user_id
+// Definir la clave secreta para AES (esto debería ser almacenado de manera segura)
+$key = '1234567890123456'; // Clave de 16 bytes para AES-128
+
+// Inicializar variables
 $encryptedText = '';
-if (isset($_POST['plainText'])) {
+$decryptedText = '';
+
+// Encriptar texto
+if (isset($_POST['plainText']) && !empty($_POST['plainText'])) {
     $plainText = $_POST['plainText'];
-    if (!openssl_public_encrypt($plainText, $encryptedText, $publicKey)) {
-        $error_message = 'Error al encriptar el texto: ' . openssl_error_string();
-        error_log($error_message);  // Registrar el error en el archivo de log
-    }
-    $encryptedText = base64_encode($encryptedText);
+
+    // Generar un IV aleatorio
+    $iv = openssl_random_pseudo_bytes(openssl_cipher_iv_length('aes-128-cbc'));
+
+    // Encriptar con AES
+    $encryptedText = openssl_encrypt($plainText, 'aes-128-cbc', $key, 0, $iv);
+    
+    // Codificar el IV y el texto encriptado en base64 para pasarlos a través de HTTP
+    $encryptedText = base64_encode($iv . $encryptedText); // Concatenar IV y el texto encriptado
 }
 
 // Desencriptar texto
-$decryptedText = '';
-if (isset($_POST['cipherText'])) {
+if (isset($_POST['cipherText']) && !empty($_POST['cipherText'])) {
     $cipherText = base64_decode($_POST['cipherText']);
-    if (!openssl_private_decrypt($cipherText, $decryptedText, $privateKey)) {
-        $error_message = 'Error al desencriptar el texto: ' . openssl_error_string();
-        error_log($error_message);  // Registrar el error en el archivo de log
-    }
+
+    // Separar el IV y el texto encriptado
+    $ivLength = openssl_cipher_iv_length('aes-128-cbc');
+    $iv = substr($cipherText, 0, $ivLength);
+    $encryptedText = substr($cipherText, $ivLength);
+
+    // Desencriptar con AES
+    $decryptedText = openssl_decrypt($encryptedText, 'aes-128-cbc', $key, 0, $iv);
 }
 ?>
-
 
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Encriptar y Desencriptar - RSA</title>
+    <title>Encriptar y Desencriptar - AES</title>
     <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR2i85hzz13fkacRTHYMtxuI4DvD1gMaRaxvw&s');
+            background-size: cover; /* Asegura que la imagen cubra toda la pantalla */
+            background-position: center; /* Centra la imagen de fondo */
+            background-attachment: fixed; /* Fija el fondo cuando se hace scroll */
+            font-family: 'Roboto', sans-serif; /* Establece la fuente para todo el cuerpo */
+            }
+    </style>
 </head>
 <body>
+    <script>
+        // Pasar el user_id de PHP a JavaScript
+        const userId = <?php echo json_encode($userId); ?>;
+
+        // Mostrar el user_id en la consola
+        console.log("User ID:", userId);
+    </script>
+    
     <div class="container">
-        <h1>Encriptar y Desencriptar Texto - RSA</h1>
-        <form action="rsa_tool.php" method="POST">
+        <h1>Encriptar y Desencriptar Texto - AES</h1>
+        <form action="aes_tool.php" method="POST">
             <div class="section">
                 <h2>Encriptar Texto</h2>
                 <label for="plainText">Texto en Claro:</label>
@@ -105,6 +98,7 @@ if (isset($_POST['cipherText'])) {
                 <?php endif; ?>
             </div>
         </form>
+        <a href="../../Logica/lagout.php">Cerrar sesión</a>
     </div>
 </body>
 </html>

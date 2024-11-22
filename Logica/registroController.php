@@ -10,6 +10,36 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         die("Error de conexión: " . mysqli_connect_error());
     }
 
+    // Validación del nombre de usuario (no más de 20 caracteres)
+    if (strlen($username) > 20) {
+        echo "<script>
+                Swal.fire({
+                    icon: 'error',
+                    title: '¡Error!',
+                    text: 'El nombre de usuario no puede tener más de 20 caracteres.',
+                    confirmButtonText: 'Aceptar'
+                }).then((result) => {
+                    return false;
+                })
+              </script>";
+        exit();
+    }
+
+    // Validación del correo electrónico para asegurar que contiene '@' y '.com'
+    if (!filter_var($correo, FILTER_VALIDATE_EMAIL) || strpos($correo, '@') === false || substr($correo, -4) !== '.com') {
+        echo "<script>
+                Swal.fire({
+                    icon: 'error',
+                    title: '¡Error!',
+                    text: 'Por favor, ingrese un correo electrónico válido que contenga @ y .com.',
+                    confirmButtonText: 'Aceptar'
+                }).then((result) => {
+                    return true;
+                })
+              </script>";
+        exit();
+    }
+
     // Verificar si el correo ya existe
     $query = "SELECT * FROM usuarios WHERE correoElectronico = ?";
     $stmt = $conn->prepare($query);
@@ -21,8 +51,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $result = $stmt->get_result();
 
     if ($result->num_rows > 0) {
-        echo "<script>alert('El correo ya está registrado.'); window.location.href='registro.php';</script>";
+        // El correo ya está registrado
+        echo "<script>
+                Swal.fire({
+                    icon: 'error',
+                    title: '¡Error!',
+                    text: 'El correo ya está registrado.',
+                    confirmButtonText: 'Aceptar'
+                }).then((result) => {
+                    return false;
+                })
+              </script>";
     } else {
+        // Insertar usuario en la base de datos
         $insert_query = "INSERT INTO usuarios (nombreUsuario, correoElectronico, contrasena, fechaRegistro) VALUES (?, ?, ?, NOW())";
         $insert_stmt = $conn->prepare($insert_query);
         if (!$insert_stmt) {
@@ -31,11 +72,31 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $insert_stmt->bind_param("sss", $username, $correo, $password);
 
         if ($insert_stmt->execute()) {
-            echo "<script>alert('Cuenta creada exitosamente.'); window.location.href='../View/Login/login.php';</script>";
+            echo "<script>
+                    Swal.fire({
+                        icon: 'success',
+                        title: '¡Éxito!',
+                        text: 'Cuenta creada exitosamente.',
+                        confirmButtonText: 'Aceptar'
+                    }).then((result) => {
+                        return false;
+                    })
+                  </script>";
         } else {
-            echo "<script>alert('Error al crear la cuenta.'); window.location.href='registro.php';</script>";
+            echo "<script>
+                    Swal.fire({
+                        icon: 'error',
+                        title: '¡Error!',
+                        text: 'Error al crear la cuenta.',
+                        confirmButtonText: 'Aceptar'
+                    }).then((result) => {
+                        return false;
+                    })
+                  </script>";
         }
     }
+
     $stmt->close();
     $conn->close();
 }
+?>

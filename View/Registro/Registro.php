@@ -7,6 +7,10 @@
     <title>Formulario de Registro - Woodcraft</title>
     <!-- Enlace al archivo CSS externo -->
     <link rel="stylesheet" href="styles.css">
+    <!-- SweetAlert 2 CDN -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
+
 </head>
 
 <body>
@@ -19,7 +23,7 @@
                 <form action="../../Logica/registroController.php" method="POST">
                 <div class="input-group">
                         <label for="registerUser">Nombre de Usuario</label>
-                        <input type="text" id="registerUser" name="registerUser" required>
+                        <input type="text" id="registerUser" name="registerUser" maxlength="20" required>
                     </div>
                     <div class="input-group">
                         <label for="registerEmail">Correo Electrónico</label>

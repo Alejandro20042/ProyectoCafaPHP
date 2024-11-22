@@ -11,7 +11,7 @@
         <div class="login-card">
             <div class="card-right">
                 <h1 class="title">Inicio de Sesión</h1>
-                <h2 class="welcome">¡Bienvenidosa!</h2>
+                <h2 class="welcome">¡Bienvenido!</h2>
                 <form action="../../Logica/loginController.php" method="POST">
                     <div class="input-group">
                         <label for="loginEmail">Correo Electrónico</label>

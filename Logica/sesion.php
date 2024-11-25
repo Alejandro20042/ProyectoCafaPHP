@@ -1,4 +1,5 @@
 <?php
+//include_once __DIR__ . '/../Conexion/conexionBD.php';
 if (session_status() == PHP_SESSION_NONE) {
     session_start();
 }

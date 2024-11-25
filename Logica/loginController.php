@@ -1,16 +1,14 @@
 <?php
 require '../Conexion/conexionBD.php';
-//include '../Logica/sesion.php';
+session_start(); // Iniciar la sesión
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    session_start();
-
     $correo = $_POST['loginEmail'];
     $password = $_POST['loginPassword'];
 
-    // Validación del correo electrónico para asegurar que contiene '@' y '.com'
-    if (!filter_var($correo, FILTER_VALIDATE_EMAIL) || strpos($correo, '@') === false || substr($correo, -4) !== '.com') {
-        $_SESSION['errorCorreo'] = 'Por favor, ingrese un correo electrónico válido que contenga @ y .com.';
+    // Validación del correo electrónico
+    if (!filter_var($correo, FILTER_VALIDATE_EMAIL) || strpos($correo, '@') === false ) {
+        $_SESSION['error'] = 'Por favor, ingrese un correo electrónico válido que contenga @';
         header('Location: http://localhost/PHP/ProyectoCafaPHP/View/Login/login.php');
         exit();
     }
@@ -32,12 +30,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             header('Location: http://localhost/PHP/ProyectoCafaPHP/View/inicio/index.php');
             exit();
         } else {
-            $_SESSION['errorContrasena'] = 'Contraseña incorrecta.';
+            $_SESSION['error'] = 'Contraseña o correo  incorrecto';
             header('Location: http://localhost/PHP/ProyectoCafaPHP/View/Login/login.php');
             exit();
         }
     } else {
-        $_SESSION['errorCorreo'] = 'Correo no registrado. Si no tienes cuenta, por favor regístrate.';
+        $_SESSION['error'] = 'Correo no registrado. Si no tienes cuenta, por favor regístrate.';
         header('Location: http://localhost/PHP/ProyectoCafaPHP/View/Login/login.php');
         exit();
     }

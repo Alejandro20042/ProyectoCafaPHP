@@ -2,11 +2,15 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Inicio de Sesión</title>
     <link rel="stylesheet" href="styles.css">
+    <!-- SweetAlert2 CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
 </head>
 <body>
+    <?php
+    session_start(); // Iniciar la sesión
+    ?>
     <div class="container">
         <div class="login-card">
             <div class="card-right">
@@ -19,7 +23,12 @@
                     </div>
                     <div class="input-group">
                         <label for="loginPassword">Contraseña</label>
-                        <input type="password" id="loginPassword" name="loginPassword" required>
+                        <div class="password-container">
+                            <input type="password" id="loginPassword" name="loginPassword" required>
+                            <button type="button" class="toggle-password" onclick="togglePasswordVisibility()">
+                                <span id="eyeIcon">👁️</span>
+                            </button>
+                        </div>
                     </div>
                     <div class="actions">
                         <button type="submit" class="btn">Iniciar Sesión</button>
@@ -31,5 +40,54 @@
             </div>
         </div>
     </div>
+
+    <!-- SweetAlert2 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        <?php if (isset($_SESSION['error'])): ?>
+            Swal.fire({
+                icon: 'error',
+                title: '¡Error!',
+                text: '<?php echo htmlspecialchars($_SESSION['error']); ?>',
+                confirmButtonText: 'Aceptar'
+            });
+            <?php unset($_SESSION['error']); ?>
+        <?php endif; ?>
+
+        function togglePasswordVisibility() {
+            const passwordField = document.getElementById('loginPassword');
+            const eyeIcon = document.getElementById('eyeIcon');
+            if (passwordField.type === 'password') {
+                passwordField.type = 'text';
+                eyeIcon.textContent = '🙈'; // Cambiar a otro icono
+            } else {
+                passwordField.type = 'password';
+                eyeIcon.textContent = '👁️'; // Volver al icono inicial
+            }
+        }
+    </script>
+
+    <style>
+        .password-container {
+            display: flex;
+            align-items: center;
+        }
+
+        .password-container input {
+            flex: 1;
+        }
+
+        .toggle-password {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1.2em;
+            margin-left: 5px;
+        }
+
+        .toggle-password:focus {
+            outline: none;
+        }
+    </style>
 </body>
 </html>

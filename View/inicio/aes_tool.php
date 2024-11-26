@@ -1,49 +1,65 @@
 <?php
-// Clave secreta para AES (debe tener al menos 16 caracteres y mantenerse segura)
-$secretKey = "clave_secreta_1234"; // Cambia esto por una clave segura
+include '../../Logica/sesion.php';  // Asegúrate de que la sesión esté activa y que el usuario esté autenticado
 
-// Función para encriptar texto con AES
-function encrypt($plaintext, $key) {
-    $iv = openssl_random_pseudo_bytes(openssl_cipher_iv_length('aes-256-cbc')); // Generar IV aleatorio
-    $encrypted = openssl_encrypt($plaintext, 'aes-256-cbc', $key, 0, $iv); // Encriptar texto
-    return base64_encode($encrypted . '::' . $iv); // Retornar texto cifrado + IV
+// Conexión a la base de datos (ajusta los datos de conexión)
+$host = 'localhost';
+$user = 'root';
+$password = '';
+$dbname = 'proyectocafa';
+
+$conn = new mysqli($host, $user, $password, $dbname);
+if ($conn->connect_error) {
+    die("Error de conexión: " . $conn->connect_error);
 }
 
-// Función para desencriptar texto con AES
-function decrypt($ciphertext, $key) {
-    // Decodificar el texto cifrado y dividir en partes
-    $parts = explode('::', base64_decode($ciphertext), 2);
-    
-    // Verificar que el texto tiene el formato correcto
-    if (count($parts) !== 2) {
-        return 'Error: El texto cifrado no tiene un formato válido.';
-    }
-
-    // Separar el texto cifrado y el IV
-    list($encrypted_data, $iv) = $parts;
-
-    // Desencriptar texto
-    return openssl_decrypt($encrypted_data, 'aes-256-cbc', $key, 0, $iv);
+// Obtener el user_id de la sesión
+if (!isset($_SESSION['user_id'])) {
+    die("Error: Usuario no autenticado.");
 }
 
-// Variables para almacenar los resultados
+$userId = $_SESSION['user_id']; // Obtener el user_id del usuario autenticado
+$key = '1234567890123456'; // Clave de 16 bytes para AES-128
+
+// Variables para el encriptado y desencriptado
 $encryptedText = '';
 $decryptedText = '';
+$mensajeOriginal = '';
 
-// Procesar el formulario
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Si se envió texto para encriptar
-    if (isset($_POST['plainText']) && !empty($_POST['plainText'])) {
-        $plainText = $_POST['plainText'];
-        $encryptedText = encrypt($plainText, $secretKey); // Encriptar texto
-    }
+// Encriptar mensaje
+if (isset($_POST['plainText']) && !empty($_POST['plainText'])) {
+    $mensajeOriginal = $_POST['plainText'];
 
-    // Si se envió texto para desencriptar
-    if (isset($_POST['cipherText']) && !empty($_POST['cipherText'])) {
-        $cipherText = $_POST['cipherText'];
-        $decryptedText = decrypt($cipherText, $secretKey); // Desencriptar texto
-    }
+    // Generar un IV aleatorio
+    $iv = openssl_random_pseudo_bytes(openssl_cipher_iv_length('aes-128-cbc'));
+
+    // Encriptar el mensaje con AES
+    $encryptedText = openssl_encrypt($mensajeOriginal, 'aes-128-cbc', $key, 0, $iv);
+    
+    // Codificar el IV y el mensaje encriptado en base64 para enviarlo por HTTP
+    $encryptedText = base64_encode($iv . $encryptedText);
+
+    // Insertar el mensaje en la base de datos (sin mostrarlo en la interfaz)
+    $stmt = $conn->prepare("INSERT INTO mensajes (usuario_id, mensajeOriginal, mensajeEncriptado) VALUES (?, ?, ?)");
+    $stmt->bind_param("iss", $userId, $mensajeOriginal, $encryptedText);
+    $stmt->execute();
+    $stmt->close();
 }
+
+// Desencriptar mensaje
+if (isset($_POST['cipherText']) && !empty($_POST['cipherText'])) {
+    $cipherText = base64_decode($_POST['cipherText']);
+
+    // Separar el IV y el mensaje encriptado
+    $ivLength = openssl_cipher_iv_length('aes-128-cbc');
+    $iv = substr($cipherText, 0, $ivLength);
+    $encryptedText = substr($cipherText, $ivLength);
+
+    // Desencriptar con AES
+    $decryptedText = openssl_decrypt($encryptedText, 'aes-128-cbc', $key, 0, $iv);
+}
+
+// Cerrar la conexión a la base de datos
+$conn->close();
 ?>
 
 <!DOCTYPE html>
@@ -52,14 +68,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Encriptar y Desencriptar - AES</title>
-    <link rel="stylesheet" href="styles.css"> <!-- Opcional: Archivo CSS si lo tienes -->
+    <link rel="stylesheet" href="styles.css">
     <style>
         body {
-            font-family: Arial, sans-serif;
             margin: 0;
-            padding: 20px;
-            background-color: #f4f4f9;
+            padding: 0;
+            background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR2i85hzz13fkacRTHYMtxuI4DvD1gMaRaxvw&s');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            font-family: 'Roboto', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
         }
+
         .container {
             max-width: 600px;
             margin: auto;
@@ -118,8 +142,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <body>
     <div class="container">
         <h1>Encriptar y Desencriptar Texto - AES</h1>
+
+        <!-- Encriptar texto -->
         <form action="aes_tool.php" method="POST">
-            <!-- Sección para encriptar -->
             <div class="section">
                 <h2>Encriptar Texto</h2>
                 <label for="plainText">Texto en Claro:</label>
@@ -133,7 +158,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <?php endif; ?>
             </div>
 
-            <!-- Sección para desencriptar -->
+            <!-- Desencriptar texto -->
             <div class="section">
                 <h2>Desencriptar Texto</h2>
                 <label for="cipherText">Texto Encriptado:</label>
@@ -147,6 +172,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <?php endif; ?>
             </div>
         </form>
+
+        <a href="../../Logica/lagout.php">Cerrar sesión</a>
     </div>
 </body>
 </html>

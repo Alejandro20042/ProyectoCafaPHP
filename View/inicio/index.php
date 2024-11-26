@@ -50,15 +50,22 @@ if (isset($_POST['cipherText']) && !empty($_POST['cipherText'])) {
     <title>Encriptar y Desencriptar - AES</title>
     <link rel="stylesheet" href="styles.css">
     <style>
-        body {
-            margin: 0;
-            padding: 0;
-            background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR2i85hzz13fkacRTHYMtxuI4DvD1gMaRaxvw&s');
-            background-size: cover; /* Asegura que la imagen cubra toda la pantalla */
-            background-position: center; /* Centra la imagen de fondo */
-            background-attachment: fixed; /* Fija el fondo cuando se hace scroll */
-            font-family: 'Roboto', sans-serif; /* Establece la fuente para todo el cuerpo */
-            }
+     body {
+    margin: 0;
+    padding: 0;
+    background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR2i85hzz13fkacRTHYMtxuI4DvD1gMaRaxvw&s');
+    background-size: cover; /* Asegura que la imagen cubra toda la pantalla */
+    background-position: center; /* Centra la imagen de fondo */
+    background-attachment: fixed; /* Fija el fondo cuando se hace scroll */
+    font-family: 'Roboto', sans-serif; /* Establece la fuente para todo el cuerpo */
+
+    /* Nuevas reglas para centrar el contenido */
+    display: flex; /* Utiliza Flexbox para la disposición */
+    justify-content: center; /* Centra horizontalmente */
+    align-items: center; /* Centra verticalmente */
+    height: 100vh; /* Asegura que el cuerpo tenga la altura completa de la pantalla */
+}
+
     </style>
 </head>
 <body>

@@ -9,6 +9,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Validación del correo electrónico
     if (!filter_var($correo, FILTER_VALIDATE_EMAIL) || strpos($correo, '@') === false ) {
         $_SESSION['error'] = 'Por favor, ingrese un correo electrónico válido que contenga @';
+       // header('Location: http://localhost/PHP/ProyectoCafaPHP/View/Login/login.php');
         header('Location: http://localhost/PHP/ProyectoCafaPHP/View/Login/login.php');
         exit();
     }
@@ -27,15 +28,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $_SESSION['user_id'] = $user['ID'];
 
             // Redirigir al inicio
-            header('Location: http://localhost/PHP/ProyectoCafaPHP/View/inicio/index.php');
+          //  header('Location: http://localhost/PHP/ProyectoCafaPHP/View/inicio/encriptar.php');
+            header('Location: http://localhost/PHP/ProyectoCafaPHP/View/inicio/encriptar.php');
             exit();
         } else {
             $_SESSION['error'] = 'Contraseña o correo  incorrecto';
+           // header('Location: http://localhost/PHP/ProyectoCafaPHP/View/Login/login.php');
             header('Location: http://localhost/PHP/ProyectoCafaPHP/View/Login/login.php');
             exit();
         }
     } else {
         $_SESSION['error'] = 'Correo no registrado. Si no tienes cuenta, por favor regístrate.';
+       // header('Location: http://localhost/PHP/ProyectoCafaPHP/View/Login/login.php');
         header('Location: http://localhost/PHP/ProyectoCafaPHP/View/Login/login.php');
         exit();
     }

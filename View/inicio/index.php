@@ -193,7 +193,7 @@ if (isset($_SESSION['decryptedText'])) {
             </div>
         </form>
 
-        <a href="View/Login/login.php">Cerrar sesión</a>
+        <a href="../../Logica/lagout.php">Cerrar sesión</a>
     </div>
 </body>
 </html>

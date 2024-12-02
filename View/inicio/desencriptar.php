@@ -1,5 +1,4 @@
 <?php
-// decrypt.php
 // Conexión a la base de datos
 $servername = "localhost";
 $username = "root";
@@ -18,51 +17,6 @@ $key = 'mi_clave_secreta_de_32_bytes'; // Debe ser de 32 bytes para AES-256-CBC
 
 // Iniciar sesión
 session_start();
-
-// Inicializar variables
-$decryptedText = '';
-
-// Verificar si el formulario de desencriptar se envió
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cipherText']) && !empty($_POST['cipherText'])) {
-    $cipherText = base64_decode($_POST['cipherText']);
-
-    // Separar el IV y el texto encriptado
-    $ivLength = openssl_cipher_iv_length('aes-256-cbc');
-    $iv = substr($cipherText, 0, $ivLength);
-    $encryptedMessage = substr($cipherText, $ivLength);
-
-    // Desencriptar el texto
-    $decryptedText = openssl_decrypt($encryptedMessage, 'aes-256-cbc', $key, 0, $iv);
-    // Guardar en la sesión para mostrar en la vista
-    $_SESSION['decryptedText'] = $decryptedText;
-
-    // Redirigir para evitar reenvíos
-    header("Location: desencriptar.php");
-    exit;
-}
-
-// Recuperar el texto desencriptado de la sesión
-if (isset($_SESSION['decryptedText'])) {
-    $decryptedText = $_SESSION['decryptedText'];
-    unset($_SESSION['decryptedText']); // Limpiar después de mostrar
-}
-?>
-
-<?php
-// Conexión a la base de datos
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "proyectocafa";
-
-$conn = new mysqli($servername, $username, $password, $dbname);
-
-// Comprobar la conexión
-if ($conn->connect_error) {
-    die("Conexión fallida: " . $conn->connect_error);
-}
-
-// Iniciar sesión
 $userId = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : 1; // Usar un ID de usuario válido por defecto (1)
 
 // Inicializar variables
@@ -78,12 +32,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['cipherText']) && !emp
     $encryptedMessage = substr($cipherText, $ivLength);
 
     // Desencriptar el texto
-    $key = 'mi_clave_secreta_de_32_bytes'; // Cambiar si usas una clave diferente
     $decryptedText = openssl_decrypt($encryptedMessage, 'aes-256-cbc', $key, 0, $iv);
-    // Guardar en la sesión para mostrar en la vista
+
+    // Validar si el mensaje fue desencriptado correctamente
+    if ($decryptedText === false) {
+        $decryptedText = "No se pudo desencriptar el mensaje. Verifica la clave y el texto encriptado.";
+    }
+
+    // Guardar en la sesión para mostrar después de redirigir
     $_SESSION['decryptedText'] = $decryptedText;
 
-    // Redirigir para evitar reenvíos
+    // Redirigir para evitar reenvío del formulario (PRG)
     header("Location: desencriptar.php");
     exit;
 }
@@ -135,7 +94,7 @@ if (isset($_SESSION['decryptedText'])) {
                         <a class="nav-link btn btn-outline-primary me-2" href="desencriptar.php">Desencriptar Texto</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link btn btn-outline-danger" href="../../Logica/lagout.php">Cerrar sesión</a>
+                        <a class="nav-link btn btn-outline-danger" href="../../Logica/logout.php">Cerrar sesión</a>
                     </li>
                 </ul>
             </div>
@@ -148,7 +107,7 @@ if (isset($_SESSION['decryptedText'])) {
             <!-- Lista de mensajes encriptados -->
             <div class="messages-list card shadow">
                 <div class="card-header d-flex justify-content-between align-items-center">
-                    <h5 class="m-0">Mensajes Encriptados </h5>
+                    <h5 class="m-0">Mensajes Encriptados</h5>
                     <div>
                         <button class="btn btn-sm btn-outline-primary" id="showAll">Mostrar Todos</button>
                         <button class="btn btn-sm btn-outline-secondary" id="hideAll">Ocultar Todos</button>
@@ -194,7 +153,7 @@ if (isset($_SESSION['decryptedText'])) {
 
             <!-- Formulario para desencriptar -->
             <div class="decrypt-form">
-                <h1 class="text-center mb-4">Desencriptar Texto - AES</h1>
+                <h1 class="text-center mb-4">Desencriptar Texto - AES 256-cbc</h1>
                 <form action="desencriptar.php" method="POST" class="card p-4 shadow">
                     <div class="mb-3">
                         <label for="cipherText" class="form-label">Texto Encriptado:</label>

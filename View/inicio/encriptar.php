@@ -93,7 +93,7 @@ if (isset($_SESSION['encryptedText'])) {
 
     <!-- Contenido principal -->
     <div class="container mt-5">
-        <h1 class="text-center mb-4">Encriptar Texto - AES</h1>
+        <h1 class="text-center mb-4">Encriptar Texto - AES 256-cbc</h1>
         <form action="encriptar.php" method="POST" class="card p-4 shadow">
             <div class="mb-3">
                 <label for="plainText" class="form-label">Texto en Claro:</label>

@@ -12,6 +12,10 @@ if (ini_get("session.use_cookies")) {
     );
 }
 
+// Depuración: Muestra el directorio actual y la ruta de redirección
+echo "Directorio actual: " . __DIR__; // Muestra el directorio actual
+echo "<br>Redirigiendo a: ../View/Login/login.php"; // Muestra la URL de redirección
+
 // Redirigir al usuario al login u otra página
 header("Location: ../View/Login/login.php");
 exit();

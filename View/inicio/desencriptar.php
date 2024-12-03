@@ -84,7 +84,7 @@ if (isset($_SESSION['decryptedText'])) {
                         <a class="nav-link btn btn-outline-primary me-2" href="desencriptar.php">Desencriptar Texto</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link btn btn-outline-danger" href="../../Logica/logout.php">Cerrar sesión</a>
+                        <a class="nav-link btn btn-outline-danger" href="/ProyectoCafaPHP/Logica/lagout.php">Cerrar sesión</a>
                     </li>
                 </ul>
             </div>

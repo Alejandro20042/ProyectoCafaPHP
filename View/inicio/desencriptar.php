@@ -64,16 +64,6 @@ if (isset($_SESSION['decryptedText'])) {
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        .main-content {
-            display: flex;
-            justify-content: space-between;
-        }
-
-        .messages-list {
-            flex: 1;
-            margin-right: 20px;
-        }
-
         .decrypt-form {
             flex: 2;
         }
@@ -103,91 +93,31 @@ if (isset($_SESSION['decryptedText'])) {
 
     <!-- Contenido principal -->
     <div class="container mt-5">
-        <div class="main-content">
-            <!-- Lista de mensajes encriptados -->
-            <div class="messages-list card shadow">
-                <div class="card-header d-flex justify-content-between align-items-center">
-                    <h5 class="m-0">Mensajes Encriptados</h5>
-                    <div>
-                        <button class="btn btn-sm btn-outline-primary" id="showAll">Mostrar Todos</button>
-                        <button class="btn btn-sm btn-outline-secondary" id="hideAll">Ocultar Todos</button>
-                    </div>
+        <!-- Formulario para desencriptar -->
+        <div class="decrypt-form">
+            <h1 class="text-center mb-4">Desencriptar Texto - AES 256-CBC</h1>
+            <form action="desencriptar.php" method="POST" class="card p-4 shadow">
+                <div class="mb-3">
+                    <label for="cipherText" class="form-label">Texto Encriptado:</label>
+                    <textarea id="cipherText" name="cipherText" rows="5" class="form-control" placeholder="Pega aquí el texto encriptado"></textarea>
                 </div>
-                <div class="card-body">
-                    <div class="accordion" id="messagesAccordion">
-                        <?php
-                        // Consulta para obtener los mensajes encriptados por usuario
-                        $stmt = $conn->prepare("SELECT id, mensajeEncriptado FROM mensajes WHERE usuario_id = ? ORDER BY fechaEnvio DESC");
-                        $stmt->bind_param("i", $userId);
-                        $stmt->execute();
-                        $result = $stmt->get_result();
-
-                        if ($result->num_rows > 0):
-                            while ($row = $result->fetch_assoc()):
-                        ?>
-                                <div class="accordion-item">
-                                    <h2 class="accordion-header" id="heading<?php echo $row['id']; ?>">
-                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse<?php echo $row['id']; ?>" aria-expanded="false" aria-controls="collapse<?php echo $row['id']; ?>">
-                                            Mensaje Encriptado
-                                        </button>
-                                    </h2>
-                                    <div id="collapse<?php echo $row['id']; ?>" class="accordion-collapse collapse" aria-labelledby="heading<?php echo $row['id']; ?>" data-bs-parent="#messagesAccordion">
-                                        <div class="accordion-body">
-                                            <?php echo htmlspecialchars($row['mensajeEncriptado']); ?>
-                                        </div>
-                                    </div>
-                                </div>
-                            <?php
-                            endwhile;
-                        else:
-                            ?>
-                            <p class="text-center text-muted">No hay mensajes encriptados disponibles para este usuario.</p>
-                        <?php
-                        endif;
-
-                        $stmt->close();
-                        ?>
-                    </div>
+                <div class="d-flex justify-content-center">
+                    <button type="submit" class="btn btn-primary">Desencriptar</button>
                 </div>
-            </div>
+            </form>
 
-            <!-- Formulario para desencriptar -->
-            <div class="decrypt-form">
-                <h1 class="text-center mb-4">Desencriptar Texto - AES 256-cbc</h1>
-                <form action="desencriptar.php" method="POST" class="card p-4 shadow">
-                    <div class="mb-3">
-                        <label for="cipherText" class="form-label">Texto Encriptado:</label>
-                        <textarea id="cipherText" name="cipherText" rows="5" class="form-control" placeholder="Pega aquí el texto encriptado"></textarea>
-                    </div>
-                    <div class="d-flex justify-content-center">
-                        <button type="submit" class="btn btn-primary">Desencriptar</button>
-                    </div>
-                </form>
-
-                <!-- Mostrar el texto desencriptado -->
-                <?php if (!empty($decryptedText)): ?>
-                    <div class="card mt-4 p-4 shadow">
-                        <h5 class="text-center">Mensaje Original Desencriptado:</h5>
-                        <p class="text-center text-muted"><?php echo htmlspecialchars($decryptedText); ?></p>
-                    </div>
-                <?php endif; ?>
-            </div>
+            <!-- Mostrar el texto desencriptado -->
+            <?php if (!empty($decryptedText)): ?>
+                <div class="card mt-4 p-4 shadow">
+                    <h5 class="text-center">Mensaje Original Desencriptado:</h5>
+                    <p class="text-center text-muted"><?php echo htmlspecialchars($decryptedText); ?></p>
+                </div>
+            <?php endif; ?>
         </div>
     </div>
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-        document.getElementById('showAll').addEventListener('click', function() {
-            const collapses = document.querySelectorAll('.accordion-collapse');
-            collapses.forEach(collapse => collapse.classList.add('show'));
-        });
-
-        document.getElementById('hideAll').addEventListener('click', function() {
-            const collapses = document.querySelectorAll('.accordion-collapse');
-            collapses.forEach(collapse => collapse.classList.remove('show'));
-        });
-    </script>
 </body>
 
 </html>

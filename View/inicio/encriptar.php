@@ -18,9 +18,19 @@ if ($conn->connect_error) {
 $key = 'mi_clave_secreta_de_32_bytes'; // Debe ser de 32 bytes para AES-256-CBC
 
 // Iniciar sesión
-session_start();
+session_start([
+    'cookie_lifetime' => 0, // La sesión expira al cerrar el navegador
+    'cookie_secure' => true, // Requiere HTTPS
+    'cookie_httponly' => true, // Solo accesible por HTTP
+    'use_strict_mode' => true, // Previene ataques de sesión
+    'use_only_cookies' => true // Solo cookies, no SID en la URL
+]);
 $userId = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : 1; // Usar un ID de usuario válido
-
+if (!isset($_SESSION['user_id']) || empty($_SESSION['user_id'])) {
+    // Redirigir al login si no hay sesión activa
+    header("Location: ../Login/login.php");
+    exit();
+}
 // Inicializar variables
 $encryptedText = '';
 
@@ -60,6 +70,7 @@ if (isset($_SESSION['encryptedText'])) {
 
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -67,29 +78,37 @@ if (isset($_SESSION['encryptedText'])) {
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
+
 <body>
     <!-- Menú de navegación -->
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container-fluid">
-            <a class="navbar-brand" href="#">Proyecto Cafa</a>
+            <a class="navbar-brand" href="#">
+                <img src="../../img/logoPHP.png" alt="Proyecto Cafa" style="width: auto; height: 50px;">
+                
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
-                    
                     <li class="nav-item">
-                        <a class="nav-link btn btn-outline-primary me-2" href="desencriptar.php">Desencriptar Texto</a>
+                        <a class="nav-link btn btn-outline-primary me-2" href="desencriptar.php">
+                            <img src="../../img/desencriptar.png" alt="Desencriptar Texto" style="width: 20px; height: 20px;">
+                            Desencriptar
+                        </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link btn btn-outline-primary me-2" href="encriptar.php">Encriptar Texto</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link btn btn-outline-danger" href="../../Logica/lagout.php">Cerrar sesión</a>
-<!--                         <a class="nav-link btn btn-outline-danger"  href="../../Logica/lagout.php">Cerrar sesión</a>
- -->
+                        <a class="nav-link btn btn-outline-danger" href="../../Logica/lagout.php">
+                            <img src="../../img/cerrar-sesion.png" alt="Cerrar Sesión" style="width: 20px; height: 20px;">
+                            Cerrar sesión
+                        </a>
                     </li>
                 </ul>
             </div>
         </div>
     </nav>
+
 
     <!-- Contenido principal -->
     <div class="container mt-5">
@@ -108,7 +127,7 @@ if (isset($_SESSION['encryptedText'])) {
             <div class="card mt-4 p-4 shadow">
                 <h5 class="text-center">Texto Encriptado:</h5>
                 <textarea readonly class="form-control mb-3"><?php echo $encryptedText; ?></textarea>
-                
+
             </div>
         <?php endif; ?>
     </div>
@@ -116,4 +135,5 @@ if (isset($_SESSION['encryptedText'])) {
     <!-- Bootstrap JS (Opcional, si se usa funcionalidad interactiva) -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>
